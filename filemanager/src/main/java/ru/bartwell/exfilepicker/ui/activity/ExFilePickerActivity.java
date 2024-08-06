@@ -3,6 +3,7 @@ package ru.bartwell.exfilepicker.ui.activity;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.KeyEvent;
@@ -169,10 +170,12 @@ public class ExFilePickerActivity extends AppCompatActivity implements OnListIte
             dialog.setOnStorageSelectedListener(this);
             dialog.show();
         } else if (itemId == R.id.new_folder) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                showNewFolderDialog();
-            } else {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_WRITE_EXTERNAL_STORAGE);
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                    showNewFolderDialog();
+                } else {
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_WRITE_EXTERNAL_STORAGE);
+                }
             }
         } else if (itemId == R.id.select_all) {
             mAdapter.selectAll();
